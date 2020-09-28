@@ -31,8 +31,8 @@ def updateAndCopyfile(srcPath, detPath):
     if not os.path.exists(srcPath):
         print "%s not exist!" % (srcPath)
     else:
-        os.chdir('C:/Program Files/TortoiseSVN/bin')
-        cmd = 'TortoiseProc.exe /command:update /path ' + srcPath + ' /notempfile /closeonend:1'
+        os.chdir(srcPath)
+        cmd = 'svn update'
         result = os.system(cmd)
 
         if result == 0:
