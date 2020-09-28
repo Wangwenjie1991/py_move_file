@@ -1,9 +1,9 @@
 # -*- coding:UTF-8 -*-
 import os
 import stat
-import os
 import shutil
 import psutil
+import sys
 
 # def handle_remove_read_only(func, path, exc):
 #     excvalue = exc[1]
@@ -12,6 +12,11 @@ import psutil
 #       func(path)
 #     else:
 #       raise
+files = [
+    '/Animation',
+    '/badam_ui',
+    '/fonts',
+]
 
 def checkprocess(processname):
     pl = psutil.pids()
@@ -27,23 +32,28 @@ def updateAndCopyfile(srcPath, detPath):
         print "%s not exist!" % (srcPath)
     else:
         os.chdir('C:/Program Files/TortoiseSVN/bin')
-        cmd = 'TortoiseProc.exe /command:revert /path ' + srcPath + ' /notempfile /closeonend:1'
+        cmd = 'TortoiseProc.exe /command:update /path ' + srcPath + ' /notempfile /closeonend:1'
         result = os.system(cmd)
+
         if result == 0:
             print('svn update succes')
-        elif not os.path.exists(detPath):
-            print "%s not exist!" % (srcPath)
-        else:
-            shutil.rmtree(detPath)
+            if os.path.exists(detPath):
+                shutil.rmtree(detPath)
             shutil.copytree(srcPath, detPath)  
             print "copy %s -> %s" % (srcPath, detPath)
 
     
-srcPath = 'E:/art22/gui'
-detPath = 'D:/code_xj/res/gui'
-if isinstance(checkprocess("Engine317.exe"), int):
-    os.system('%s%s' % ("taskkill /F /IM ", 'Engine317.exe'))
+    
 
-updateAndCopyfile(srcPath, detPath)
+def main():
+    srcPath = sys.argv[1]
+    detPath = sys.argv[2]
 
+    if isinstance(checkprocess("Engine317.exe"), int):
+        os.system('%s%s' % ("taskkill /F /IM ", 'Engine317.exe'))
 
+    for pathName in files:
+        updateAndCopyfile(srcPath + pathName, detPath + pathName)
+
+if __name__ == "__main__":
+    main()
